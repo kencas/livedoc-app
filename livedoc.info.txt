@@ -1,0 +1,29 @@
+      ________          ________          ________    > This services caches STOMP `client`s in a structure called `callCenter`
+     |  Web   |        |  Web   |        |  Web   |   > `callCenter` has one `dialer` per WS server from LiveDocConfig
+     | Socket |        | Socket |        | Socket |   > Each `dialer` keeps reference to the last used STOMP `client` for dialer's server
+     |________|        |________|        |________|   > STOMP `client` is an object provided by SompJS
+                           *|*                        >   and is used for communicating over STOMP protocol
+                        *   |   *                     > WS connections are turned into streams by method `connectServer()`
+                     *      |      *                  > These streams are sheared using custom RxJS operator `distribute` (lazy disconnect)
+   ______________ *  _______|______   *______________
+  |    STOMP     |  |    STOMP     |  |    STOMP     |    > STOMP is turned into a stream by our method `subscribeStompClient`
+  | Subscription |  | Subscription |  | Subscription |    > This service refers to these streams as "Partial STOMP Streams"
+  |______________|  |______________|  |______________|    > Partial STOMP Streams are cached in a member `partialStompStreams` (as JS Map)
+ _______||______     _______||______    ______||_______   > Partial STOMP Streams are shared using custom RxJS operator `distribute`
+| * Headers     |  | * Headers     |  | * Headers     |   > Partial STOMP Streams are not equiped with the mechanism to `retry` on error
+| * Destination |  | * Destination |  | * Destination |
+|_______________|  |_______________|  |_______________|
+                          *|*
+                       *   |   *
+                   *       |       *
+               *           |           *
+           *               |               *
+       *                   |                   *
+ ______|________    _______|_______     _______|_______   > These streams are ready to be subscribed for obtaining a LiveDoc
+| * Headers     |  | * Headers     |   | * Headers     |  > This service refers to these streams as `Full STOMP Streams`
+| * Destination |  | * Destination |   | * Destination |  > Full STOMP Streams are cached in a member `fullStompStreams`
+| * DeltaMergeFn|  | * DeltaMergeFn|   | * DeltaMergeFn|  > The cache is implemented with a custom class SimpleCache.
+|_______________|  |_______________|   |_______________|  > Full STOMP Streams are shared using custom RxJS operator `distribute`
+                                                          > Full STOMP Streams are equiped with the mechanism to `retry` on error
+
+

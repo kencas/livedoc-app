@@ -1,0 +1,21 @@
+{
+  "name": "livedoc",
+  "version": "0.0.1",
+  "description": "LiveDoc service loads documents over WS and gets updates as deltas",
+  "author": "Levan Roinishvili <levan.roinishvili@fincore.com>",
+  "contributors": [
+    "Zeljko Vracaric <zeljko.vracaric@fincore.com>",
+    "Ivana Mitrovic <ivanam@fincore.com>"
+  ],
+  "license": "UNLICENSED",
+  "private": false,
+  "peerDependencies": {
+    "@angular/core": ">=6.0.0 <10.0.0"
+  },
+  "dependencies": {
+    "tslib": "^2.0.0"
+  },
+  "publishConfig": {
+    "registry": "https://github.com/ZEGAMINGNIG/zebet-fincore-connection.git"
+  }
+}
